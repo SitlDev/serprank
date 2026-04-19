@@ -4,6 +4,7 @@ import './App.css'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
 import { AuthPage } from './pages/AuthPage'
+import { TestConnection } from './components/TestConnection'
 import { AuthService } from './services/auth'
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/test" element={<TestConnection />} />
         <Route path="/login" element={<AuthPage mode="login" />} />
         <Route path="/register" element={<AuthPage mode="register" />} />
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import keywordRoutes from './routes/keywords';
 import serpRoutes from './routes/serp';
+import testRoutes from './routes/test';
 import { errorHandler } from './middleware/auth';
 import { testConnection } from './database/connection';
 
@@ -54,7 +55,8 @@ app.get('/api/health/db', async (req: Request, res: Response) => {
   }
 });
 
-// API Routes
+// API Routestest', testRoutes);
+app.use('/api/
 app.use('/api/auth', authRoutes);
 app.use('/api/keywords', keywordRoutes);
 app.use('/api/serp', serpRoutes);
