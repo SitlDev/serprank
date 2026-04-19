@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  color: #0f172a;
+  line-height: 1.6;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Custom components */
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-brand-500 text-white rounded-lg font-semibold hover:bg-brand-600 transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-slate-100 text-slate-800 rounded-lg font-semibold hover:bg-slate-200 transition-all duration-200;
+  }
+
+  .btn-outline {
+    @apply px-6 py-3 border-2 border-brand-500 text-brand-600 rounded-lg font-semibold hover:bg-brand-50 transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300;
+  }
+
+  .heading-lg {
+    @apply text-4xl md:text-5xl font-bold font-display text-slate-900 leading-tight;
+  }
+
+  .heading-md {
+    @apply text-2xl md:text-3xl font-bold font-display text-slate-900;
+  }
+
+  .heading-sm {
+    @apply text-xl font-bold font-display text-slate-800;
+  }
+
+  .text-muted {
+    @apply text-slate-600;
+  }
+}
