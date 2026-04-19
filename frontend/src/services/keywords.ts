@@ -2,26 +2,52 @@ import apiClient from './api'
 
 export interface KeywordAnalysis {
   keyword: string
-  keywordScore: number
-  avgDomainScore: number
-  totalWeaknesses: number
-  results: SerpResult[]
-  recommendation: string
+  analysis: {
+    keywordScore: number
+    opportunityLevel: 'exceptional' | 'strong' | 'moderate' | 'challenging'
+    estimatedTraffic: number
+    avgDomainScore: number
+    avgWeaknessScore: number
+  }
+  scoringBreakdown: {
+    volumeScore: number
+    difficultyScore: number
+    weaknessOpportunityScore: number
+    competitionScore: number
+    weights: Record<string, number>
+    explanation: string
+  }
+  serpResults: SerpResult[]
+  timestamp: string
 }
 
 export interface SerpResult {
   position: number
-  domain: string
   url: string
-  domainScore: number
-  pageScore: number
+  title: string
+  domain: string
+  metrics: {
+    domainScore: number
+    pageScore: number
+    spamScore: number
+    pageSpeed: number
+    isHttps: boolean
+    hasCanonical: boolean
+    contentAgeDays: number
+    isMobileFriendly: boolean
+    backlinksCount: number
+    referringDomains: number
+  }
   weaknesses: Weakness[]
-  weaknessCount: number
+  weaknessScore: number
 }
 
 export interface Weakness {
-  type: string
+  id: string
+  weaknessType: string
   severity: 'critical' | 'high' | 'medium' | 'low'
+  description: string
+  points: number
 }
 
 export interface Keyword {

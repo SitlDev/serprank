@@ -1,27 +1,19 @@
 import React, { useState } from 'react'
-import { Search, Filter, Download, Plus, TrendingUp, Zap, AlertCircle, LogOut } from 'lucide-react'
+import { Search, TrendingUp, Zap, AlertCircle, LogOut, Loader, ChevronDown } from 'lucide-react'
 import { Button } from '../components/Button'
 import { Input } from '../components/Input'
 import { Alert } from '../components/Alert'
-import { SerpResultCard } from '../components/SerpResultCard'
-import { KeywordService, KeywordAnalysis } from '../services/keywords'
+import { KeywordService } from '../services/keywords'
 import { AuthService } from '../services/auth'
 import { useNavigate } from 'react-router-dom'
 
 export default function Dashboard() {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('keywords')
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [analysis, setAnalysis] = useState<KeywordAnalysis | null>(null)
-
-  const tabs = [
-    { id: 'keywords', label: 'Keyword Research', icon: Search },
-    { id: 'analysis', label: 'SERP Analysis', icon: TrendingUp },
-    { id: 'competitors', label: 'Competitors', icon: Zap },
-    { id: 'gaps', label: 'Content Gaps', icon: AlertCircle },
-  ]
+  const [analysis, setAnalysis] = useState<any | null>(null)
+  const [expandedResult, setExpandedResult] = useState<number | null>(null)
 
   const handleAnalyze = async () => {
     if (!searchQuery.trim()) {
@@ -36,7 +28,7 @@ export default function Dashboard() {
       const result = await KeywordService.analyzeKeyword(searchQuery)
       setAnalysis(result)
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Error analyzing keyword')
+      setError(err.message || 'Error analyzing keyword')
     } finally {
       setIsLoading(false)
     }
@@ -47,7 +39,334 @@ export default function Dashboard() {
     navigate('/')
   }
 
-  const mockKeywords = [
+  const getOpportunityColor = (level: string) => {
+    switch (level) {
+      case 'exceptional':
+        return 'bg-green-100 text-green-800 border-green-300'
+      case 'strong':
+        return 'bg-blue-100 text-blue-800 border-blue-300'
+      case 'moderate':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+      case 'challenging':
+        return 'bg-red-100 text-red-800 border-red-300'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const getOpportunityEmoji = (level: string) => {
+    switch (level) {
+      case 'exceptional':
+        return '🌟'
+      case 'strong':
+        return '✅'
+      case 'moderate':
+        return '⚠️'
+      case 'challenging':
+        return '❌'
+      default:
+        return '❓'
+    }
+  }
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical':
+        return 'bg-red-100 text-red-700'
+      case 'high':
+        return 'bg-orange-100 text-orange-700'
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-700'
+      case 'low':
+        return 'bg-blue-100 text-blue-700'
+      default:
+        return 'bg-gray-100 text-gray-700'
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Top Navigation */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+              SR
+            </div>
+            <span className="text-xl font-bold text-slate-900">SERPRank</span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <div className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold">
+              📊 1,000 credits
+            </div>
+            <button
+              onClick={handleLogout}
+              className="p-2 hover:bg-slate-100 rounded-lg transition flex items-center space-x-2 text-slate-600"
+            >
+              <LogOut size={20} />
+              <span className="text-sm">Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2 text-slate-900">Keyword Intelligence</h1>
+          <p className="text-slate-600">Discover opportunities competitors missed and track your ranking potential</p>
+        </div>
+
+        {/* Search Section */}
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
+          <div className="flex space-x-3">
+            <Input
+              type="text"
+              placeholder="Enter a keyword to analyze (e.g., 'best headphones')"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAnalyze()}
+              disabled={isLoading}
+              className="flex-1"
+            />
+            <Button
+              onClick={handleAnalyze}
+              disabled={isLoading}
+              className="px-6"
+            >
+              {isLoading ? (
+                <>
+                  <Loader size={18} className="animate-spin mr-2" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Search size={18} className="mr-2" />
+                  Analyze
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert
+            type="error"
+            title="Error"
+            message={error}
+            onClose={() => setError(null)}
+          />
+        )}
+
+        {/* Results */}
+        {analysis && (
+          <div className="space-y-6">
+            {/* Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* KeywordScore Card */}
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <p className="text-slate-600 text-sm font-semibold mb-3">KeywordScore</p>
+                <div className="flex items-center space-x-3">
+                  <div className="text-4xl font-bold text-blue-600">{analysis.analysis.keywordScore}</div>
+                  <div className="flex-1">
+                    <div className="w-full bg-slate-200 rounded-full h-2 mb-2">
+                      <div
+                        className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full transition-all"
+                        style={{ width: `${analysis.analysis.keywordScore}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-slate-600">Out of 100</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Opportunity Level */}
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <p className="text-slate-600 text-sm font-semibold mb-3">Opportunity</p>
+                <div className={`px-4 py-3 rounded-lg border ${getOpportunityColor(analysis.analysis.opportunityLevel)}`}>
+                  <p className="text-lg font-bold">
+                    {getOpportunityEmoji(analysis.analysis.opportunityLevel)} {analysis.analysis.opportunityLevel.charAt(0).toUpperCase() + analysis.analysis.opportunityLevel.slice(1)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Traffic Estimate */}
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <p className="text-slate-600 text-sm font-semibold mb-3">Est. Traffic</p>
+                <p className="text-3xl font-bold text-green-600">{analysis.analysis.estimatedTraffic.toLocaleString()}</p>
+                <p className="text-xs text-slate-600 mt-2">Monthly visits if rank #1</p>
+              </div>
+
+              {/* Avg Domain Score */}
+              <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                <p className="text-slate-600 text-sm font-semibold mb-3">Avg DA</p>
+                <p className="text-3xl font-bold text-purple-600">{analysis.analysis.avgDomainScore}</p>
+                <p className="text-xs text-slate-600 mt-2">In top 10 results</p>
+              </div>
+            </div>
+
+            {/* Scoring Breakdown */}
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+              <h3 className="text-lg font-bold text-slate-900 mb-4">Scoring Breakdown</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="border border-slate-200 rounded-lg p-4">
+                  <p className="text-sm text-slate-600 mb-2">Search Volume</p>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 bg-slate-200 rounded-full h-3">
+                      <div
+                        className="bg-blue-500 h-3 rounded-full"
+                        style={{ width: `${analysis.scoringBreakdown.volumeScore}%` }}
+                      />
+                    </div>
+                    <span className="font-bold text-slate-900">{analysis.scoringBreakdown.volumeScore}</span>
+                  </div>
+                </div>
+                <div className="border border-slate-200 rounded-lg p-4">
+                  <p className="text-sm text-slate-600 mb-2">Keyword Difficulty</p>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 bg-slate-200 rounded-full h-3">
+                      <div
+                        className="bg-green-500 h-3 rounded-full"
+                        style={{ width: `${analysis.scoringBreakdown.difficultyScore}%` }}
+                      />
+                    </div>
+                    <span className="font-bold text-slate-900">{analysis.scoringBreakdown.difficultyScore}</span>
+                  </div>
+                </div>
+                <div className="border border-slate-200 rounded-lg p-4">
+                  <p className="text-sm text-slate-600 mb-2">SERP Weaknesses</p>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 bg-slate-200 rounded-full h-3">
+                      <div
+                        className="bg-orange-500 h-3 rounded-full"
+                        style={{ width: `${analysis.scoringBreakdown.weaknessOpportunityScore}%` }}
+                      />
+                    </div>
+                    <span className="font-bold text-slate-900">{analysis.scoringBreakdown.weaknessOpportunityScore}</span>
+                  </div>
+                </div>
+                <div className="border border-slate-200 rounded-lg p-4">
+                  <p className="text-sm text-slate-600 mb-2">Competition</p>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 bg-slate-200 rounded-full h-3">
+                      <div
+                        className="bg-purple-500 h-3 rounded-full"
+                        style={{ width: `${analysis.scoringBreakdown.competitionScore}%` }}
+                      />
+                    </div>
+                    <span className="font-bold text-slate-900">{analysis.scoringBreakdown.competitionScore}</span>
+                  </div>
+                </div>
+              </div>
+              {analysis.scoringBreakdown.explanation && (
+                <p className="text-sm text-slate-600 mt-4 p-3 bg-slate-50 rounded border border-slate-200">
+                  {analysis.scoringBreakdown.explanation}
+                </p>
+              )}
+            </div>
+
+            {/* SERP Results */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-bold text-slate-900">Top 10 Results</h3>
+              {analysis.serpResults.map((result: any, index: number) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden"
+                >
+                  <button
+                    onClick={() => setExpandedResult(expandedResult === index ? null : index)}
+                    className="w-full p-4 text-left hover:bg-slate-50 transition"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <span className="text-sm font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full">
+                            #{result.position}
+                          </span>
+                          <span className="text-sm font-semibold text-slate-600">{result.domain}</span>
+                        </div>
+                        <p className="text-slate-900 font-semibold truncate">{result.title}</p>
+                        <p className="text-sm text-slate-500 truncate">{result.url}</p>
+                      </div>
+                      <ChevronDown
+                        size={20}
+                        className={`text-slate-400 transition-transform ${
+                          expandedResult === index ? 'transform rotate-180' : ''
+                        }`}
+                      />
+                    </div>
+                  </button>
+
+                  {/* Expanded Details */}
+                  {expandedResult === index && (
+                    <div className="border-t border-slate-200 bg-slate-50 p-4">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                          <p className="text-xs text-slate-600 mb-1">Domain Authority</p>
+                          <p className="text-lg font-bold text-slate-900">{result.metrics.domainScore}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-600 mb-1">Page Authority</p>
+                          <p className="text-lg font-bold text-slate-900">{result.metrics.pageScore}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-600 mb-1">Page Speed</p>
+                          <p className="text-lg font-bold text-slate-900">{result.metrics.pageSpeed.toFixed(2)}s</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-600 mb-1">Spam Score</p>
+                          <p className="text-lg font-bold text-slate-900">{result.metrics.spamScore}</p>
+                        </div>
+                      </div>
+
+                      {/* Weaknesses */}
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900 mb-2">
+                          Detected Weaknesses ({result.weaknesses.length})
+                        </p>
+                        <div className="space-y-2">
+                          {result.weaknesses.length > 0 ? (
+                            result.weaknesses.map((weakness: any, wIdx: number) => (
+                              <div key={wIdx} className="bg-white rounded p-2 border border-slate-200">
+                                <div className="flex items-start space-x-2">
+                                  <span className={`px-2 py-1 rounded text-xs font-semibold whitespace-nowrap ${getSeverityColor(weakness.severity)}`}>
+                                    {weakness.severity.toUpperCase()}
+                                  </span>
+                                  <div className="flex-1">
+                                    <p className="text-sm font-semibold text-slate-900">
+                                      {weakness.weaknessType.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                                    </p>
+                                    <p className="text-xs text-slate-600">{weakness.description}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-sm text-slate-600 italic">No significant weaknesses detected</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!analysis && !isLoading && (
+          <div className="text-center py-12">
+            <Search size={48} className="mx-auto text-slate-400 mb-4" />
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">No analysis yet</h3>
+            <p className="text-slate-600">Enter a keyword above to get started with SERP analysis</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
     { keyword: 'best coffee makers 2026', volume: 8900, score: 85, difficulty: 45, trend: 'up' },
     { keyword: 'how to make cold brew', volume: 5400, score: 78, difficulty: 32, trend: 'up' },
     { keyword: 'espresso machine brands', volume: 4200, score: 72, difficulty: 58, trend: 'stable' },
