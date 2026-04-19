@@ -16,46 +16,64 @@ export interface SerpFeature {
 
 /**
  * SERP Scraper Service
- * Fetches and parses Google search results
+ * Fetches and parses Google search results using Serper.dev API
  * 
- * Note: In production, use a proper API like:
- * - SerpAPI (serper.dev, serpapi.com)
- * - Bright Data
- * - ScrapingBee
- * 
- * This is a basic implementation for development
+ * API: https://serper.dev
+ * Pricing: 100/month free, then $10/month for 500 searches
  */
 export class SerpScraperService {
-  private static readonly GOOGLE_SEARCH_URL = 'https://www.google.com/search';
-  private static readonly USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36';
+  private static readonly SERPER_API_URL = 'https://google.serper.dev/search';
+  private static readonly SERPER_API_KEY = process.env.SERPER_API_KEY;
 
   /**
-   * Fetch organic search results from Google
-   * WARNING: Real scraping Google is against ToS. Use an API instead.
+   * Fetch organic search results from Google via Serper.dev
    */
   static async fetchSearchResults(keyword: string, limit: number = 10): Promise<SerpResult[]> {
+    if (!this.SERPER_API_KEY) {
+      console.warn('⚠️  SERPER_API_KEY not set. Using mock data. Get one at https://serper.dev');
+      return this.getMockResults(keyword);
+    }
+
     try {
-      // In production, you should use a proper API service
-      const results = await this.fetchWithAPI(keyword, limit);
+      const results = await this.fetchWithSerperAPI(keyword, limit);
       return results;
     } catch (error) {
-      console.error('Error fetching search results:', error);
-      // Return mock data for development
+      console.error('Error fetching search results from Serper.dev:', error);
+      // Fallback to mock data on error
       return this.getMockResults(keyword);
     }
   }
 
   /**
-   * Use a proper SERP API (mock for development)
+   * Fetch results from Serper.dev API
    */
-  private static async fetchWithAPI(keyword: string, limit: number = 10): Promise<SerpResult[]> {
-    // In production, implement with actual API:
-    // - serper.dev
-    // - serpapi.com
-    // - etc.
-    
-    // For now, return mock data
-    return this.getMockResults(keyword);
+  private static async fetchWithSerperAPI(keyword: string, limit: number = 10): Promise<SerpResult[]> {
+    const response = await axios.post(
+      this.SERPER_API_URL,
+      {
+        q: keyword,
+        num: limit,
+        autocorrect: true,
+        gl: 'us',
+        hl: 'en'
+      },
+      {
+        headers: {
+          'X-API-KEY': this.SERPER_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    // Transform Serper.dev response to our format
+    return (response.data.organic || []).map((result: any, index: number) => ({
+      position: index + 1,
+      url: result.link,
+      title: result.title,
+      description: result.snippet,
+      domain: new URL(result.link).hostname || '',
+      displayUrl: result.link
+    }));
   }
 
   /**
