@@ -5,6 +5,7 @@ import authRoutes from './routes/auth';
 import keywordRoutes from './routes/keywords';
 import serpRoutes from './routes/serp';
 import { errorHandler } from './middleware/auth';
+import { testConnection } from './database/connection';
 
 dotenv.config();
 
@@ -34,6 +35,25 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
+// Database health check
+app.get('/api/health/db', async (req: Request, res: Response) => {
+  try {
+    const isConnected = await testConnection();
+    res.status(isConnected ? 200 : 503).json({
+      status: isConnected ? 'ok' : 'error',
+      database: isConnected ? 'connected' : 'disconnected',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'error',
+      database: 'disconnected',
+      error: String(error),
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/keywords', keywordRoutes);
@@ -49,10 +69,13 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
   console.log(`✅ Server running on port ${PORT}`);
   console.log(`📡 Frontend: ${process.env.FRONTEND_URL || 'http://localhost:5173'}`);
-  console.log(`🗄️  Database: ${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`);
+  console.log(`🗄️  Using: ${process.env.DATABASE_URL ? 'DATABASE_URL' : `${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`}`);
+  
+  // Test database connection on startup
+  await testConnection();
 });
 
 // Graceful shutdown
