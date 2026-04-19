@@ -138,6 +138,13 @@ export class SerpResultModel {
     );
     return result.rows[0];
   }
+
+  static async deleteByKeywordId(keywordId: string): Promise<void> {
+    await query(
+      'DELETE FROM serp_results WHERE keyword_id = $1',
+      [keywordId]
+    );
+  }
 }
 
 // Weakness Model

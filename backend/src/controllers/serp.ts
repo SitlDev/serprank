@@ -4,6 +4,7 @@ import { SerpScraperService } from '../services/serp-scraper';
 import { DomainAuthorityService } from '../services/domain-authority';
 import { WeaknessDetectionService, DetectedWeakness } from '../services/weakness-detection';
 import { KeywordScoreService } from '../services/keyword-score';
+import { KeywordModel, SerpResultModel, WeaknessModel } from '../models/index';
 
 export class SerpController {
   /**
@@ -33,7 +34,18 @@ export class SerpController {
         return res.status(400).json({ error: 'No SERP results found' });
       }
 
-      // Step 2: Analyze each SERP result
+      // Step 2: Create/get keyword record
+      console.log('💾 Saving keyword to database...');
+      let keywordRecord = await KeywordModel.findByKeyword(keyword);
+      if (!keywordRecord) {
+        keywordRecord = await KeywordModel.create(keyword, 5000, 35); // Mock search volume and difficulty
+      }
+
+      // Delete previous analysis if exists
+      await WeaknessModel.deleteByKeyword(keywordRecord.id);
+      await SerpResultModel.deleteByKeywordId(keywordRecord.id);
+
+      // Step 3: Analyze each SERP result
       console.log('🔎 Analyzing results for weaknesses...');
       const analysisResults = [];
       const domainScoresArray: number[] = [];
@@ -54,6 +66,28 @@ export class SerpController {
 
         domainScoresArray.push(domainScore);
 
+        // Create SERP result record
+        const resultRecord = await SerpResultModel.create(
+          keywordRecord.id,
+          serpResult.position,
+          serpResult.url,
+          serpResult.title,
+          serpResult.description,
+          serpResult.domain
+        );
+
+        // Update with metrics
+        await SerpResultModel.updateMetrics(
+          resultRecord.id,
+          domainScore,
+          pageScore,
+          spamScore,
+          pageSpeed,
+          isHttps,
+          hasCanonical,
+          contentAgeDays
+        );
+
         // Detect weaknesses
         const weaknesses = WeaknessDetectionService.analyzeResult(
           serpResult.position,
@@ -66,10 +100,20 @@ export class SerpController {
           hasCanonical,
           contentAgeDays,
           isMobileFriendly,
-          false, // hasStructuredData - would detect in real implementation
+          false, // hasStructuredData
           backlinksCount,
           referringDomains
         );
+
+        // Save weaknesses to database
+        for (const weakness of weaknesses) {
+          await WeaknessModel.create(
+            resultRecord.id,
+            weakness.weaknessType,
+            weakness.severity,
+            weakness.description
+          );
+        }
 
         const weaknessScore = WeaknessDetectionService.calculateTotalWeaknessScore(weaknesses);
         totalWeaknessScore += weaknessScore;
@@ -96,14 +140,14 @@ export class SerpController {
         });
       }
 
-      // Step 3: Calculate keyword score
+      // Step 4: Calculate keyword score
       console.log('📈 Calculating KeywordScore...');
       const avgDomainScore = domainScoresArray.reduce((a, b) => a + b, 0) / domainScoresArray.length;
       const avgWeaknessScore = totalWeaknessScore / serpResults.length;
 
       // Mock search volume and difficulty (would come from keyword research API in production)
-      const mockSearchVolume = 5000; // placeholder
-      const mockKeywordDifficulty = 35; // placeholder
+      const mockSearchVolume = 5000;
+      const mockKeywordDifficulty = 35;
 
       const keywordScore = KeywordScoreService.calculateKeywordScore(
         mockSearchVolume,
@@ -113,7 +157,7 @@ export class SerpController {
       );
 
       const opportunityLevel = KeywordScoreService.getOpportunityLevel(keywordScore);
-      const estimatedTraffic = KeywordScoreService.estimateTraffic(mockSearchVolume, 1); // Assumes we can rank #1
+      const estimatedTraffic = KeywordScoreService.estimateTraffic(mockSearchVolume, 1);
 
       const scoringBreakdown = KeywordScoreService.getScoringBreakdown(
         mockSearchVolume,
@@ -122,7 +166,15 @@ export class SerpController {
         avgDomainScore
       );
 
-      // Step 4: Return comprehensive analysis
+      // Step 5: Save keyword score to database
+      console.log('💾 Saving keyword score...');
+      await KeywordModel.updateKeywordScore(
+        keywordRecord.id,
+        keywordScore,
+        estimatedTraffic
+      );
+
+      // Step 6: Return comprehensive analysis
       console.log('✅ Analysis complete');
 
       res.json({
@@ -139,7 +191,7 @@ export class SerpController {
         timestamp: new Date().toISOString()
       });
 
-      // TODO: Save to database and deduct credits
+      // TODO: Deduct user credits
       // await UserModel.updateCredits(req.userId!, -10);
 
     } catch (error) {
@@ -158,12 +210,28 @@ export class SerpController {
     try {
       const { keywordId } = req.params;
       
-      // TODO: Implement database query to fetch saved analysis
-      // For now, return a placeholder
+      const keyword = await KeywordModel.findById(keywordId);
+      if (!keyword) {
+        return res.status(404).json({ error: 'Keyword not found' });
+      }
+
+      const serpResults = await SerpResultModel.findByKeywordId(keywordId);
       
+      // Get weaknesses for each result
+      const resultsWithWeaknesses = await Promise.all(
+        serpResults.map(async (result) => {
+          const weaknesses = await WeaknessModel.findBySerpResultId(result.id);
+          return { ...result, weaknesses };
+        })
+      );
+
       res.json({
-        message: 'Analysis retrieval not yet implemented',
-        keywordId
+        keyword: keyword.keyword,
+        keywordScore: keyword.keyword_score,
+        estimatedTraffic: keyword.estimated_traffic,
+        results: resultsWithWeaknesses,
+        createdAt: keyword.created_at,
+        updatedAt: keyword.updated_at
       });
     } catch (error) {
       console.error('Error retrieving analysis:', error);
