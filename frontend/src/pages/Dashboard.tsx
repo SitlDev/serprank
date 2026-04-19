@@ -367,10 +367,6 @@ export default function Dashboard() {
     </div>
   )
 }
-    { keyword: 'best coffee makers 2026', volume: 8900, score: 85, difficulty: 45, trend: 'up' },
-    { keyword: 'how to make cold brew', volume: 5400, score: 78, difficulty: 32, trend: 'up' },
-    { keyword: 'espresso machine brands', volume: 4200, score: 72, difficulty: 58, trend: 'stable' },
-  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
