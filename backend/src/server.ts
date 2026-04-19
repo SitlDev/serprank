@@ -55,8 +55,8 @@ app.get('/api/health/db', async (req: Request, res: Response) => {
   }
 });
 
-// API Routestest', testRoutes);
-app.use('/api/
+// API Routes
+app.use('/api/test', testRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/keywords', keywordRoutes);
 app.use('/api/serp', serpRoutes);
