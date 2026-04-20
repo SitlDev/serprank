@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERPRank - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #64748b;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Search Demo */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .search-bar button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-bar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .search-bar button:active {
+            transform: translateY(0);
+        }
+
+        /* Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results-table thead {
+            background-color: #f1f5f9;
+        }
+
+        .results-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .results-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .results-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Difficulty Badge */
+        .difficulty-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .difficulty-easy {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+
+        .difficulty-medium {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+
+        .difficulty-hard {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Opportunity Badge */
+        .opportunity-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .opportunity-excellent {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+
+        .opportunity-good {
+            background-color: #bfdbfe;
+            color: #0369a1;
+        }
+
+        .opportunity-fair {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+
+        /* Charts Section */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-box {
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chart-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+
+        /* Bar Chart */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            gap: 10px;
+        }
+
+        .bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .bar-fill {
+            width: 100%;
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bar-fill:hover {
+            filter: brightness(1.1);
+        }
+
+        .bar-label {
+            font-size: 0.85em;
+            color: #64748b;
+            text-align: center;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #bfdbfe;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #0369a1;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #0c4a6e;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #64748b;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .tab-button.active {
+            color: #10b981;
+            border-bottom-color: #10b981;
+        }
+
+        .tab-button:hover {
+            color: #1e293b;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #94a3b8;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        .disclaimer {
+            background-color: #fef3c7;
+            border: 1px solid #fcd34d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            color: #b45309;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #10b981;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SERPRank Interactive Demo</h1>
+            <p class="subtitle">Explore keyword analysis, trending keywords, and opportunity scoring</p>
+        </header>
+
+        <div class="disclaimer">
+            💡 This is an interactive demo using sample data. <a href="http://localhost:5173" style="color: inherit; text-decoration: underline;">Visit the live app</a> to analyze real keywords.
+        </div>
+
+        <!-- Keyword Analysis Demo -->
+        <div class="demo-section">
+            <h2 class="section-title">📊 Keyword Analysis</h2>
+            
+            <div class="search-bar">
+                <input type="text" id="keywordInput" placeholder="Enter a keyword (e.g., 'best seo tools', 'keyword research')" value="best seo tools">
+                <button onclick="analyzeKeyword()">Analyze</button>
+            </div>
+
+            <table class="results-table" id="resultsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Keyword</th>
+                        <th>Volume</th>
+                        <th>Difficulty</th>
+                        <th>Est. Traffic</th>
+                        <th>Opportunity</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+
+            <div id="noResults" style="text-align: center; color: #94a3b8; padding: 20px;">
+                Enter a keyword and click "Analyze" to see results
+            </div>
+        </div>
+
+        <!-- Trending Keywords Demo -->
+        <div class="demo-section">
+            <h2 class="section-title">🔥 Trending Keywords</h2>
+
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTrendTab('google')">Google</button>
+                <button class="tab-button" onclick="switchTrendTab('youtube')">YouTube</button>
+                <button class="tab-button" onclick="switchTrendTab('twitter')">Twitter/X</button>
+                <button class="tab-button" onclick="switchTrendTab('tiktok')">TikTok</button>
+            </div>
+
+            <div id="google-tab" class="tab-content active">
+                <div id="googleTrends"></div>
+            </div>
+            <div id="youtube-tab" class="tab-content">
+                <div id="youtubeTrends"></div>
+            </div>
+            <div id="twitter-tab" class="tab-content">
+                <div id="twitterTrends"></div>
+            </div>
+            <div id="tiktok-tab" class="tab-content">
+                <div id="tiktokTrends"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Demo -->
+        <div class="demo-section">
+            <h2 class="section-title">📈 Analytics & Insights</h2>
+
+            <div class="charts-container">
+                <!-- Difficulty Distribution -->
+                <div class="chart-box">
+                    <div class="chart-title">Difficulty Distribution</div>
+                    <div class="bar-chart">
+                        <div class="bar">
+                            <div class="bar-fill" style="height: 40%; background-color: #86efac;" title="Easy: 12 keywords"></div>
+                            <div class="bar-label">Easy</div>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" style="height: 65%; background-color: #fcd34d;" title="Medium: 21 keywords"></div>
+                            <div class="bar-label">Medium</div>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" style="height: 85%; background-color: #fb923c;" title="Hard: 28 keywords"></div>
+                            <div class="bar-label">Hard</div>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" style="height: 55%; background-color: #f87171;" title="V.Hard: 18 keywords"></div>
+                            <div class="bar-label">V.Hard</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="chart-box">
+                    <div class="chart-title">Key Metrics</div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Keywords Analyzed</div>
+                            <div class="stat-value">1,247</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Opportunities Found</div>
+                            <div class="stat-value">342</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Avg. Difficulty</div>
+                            <div class="stat-value">45</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Comparison -->
+        <div class="demo-section">
+            <h2 class="section-title">✨ Key Features</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="padding: 20px; background: #f0f9ff; border-radius: 12px; border-left: 4px solid #0369a1;">
+                    <h3 style="color: #0c4a6e; margin-bottom: 8px;">SERP Analysis</h3>
+                    <p style="color: #64748b; font-size: 0.9em;">Deep analysis of search results showing competitor data, SERP features, and ranking opportunities.</p>
+                </div>
+
+                <div style="padding: 20px; background: #f0fdf4; border-radius: 12px; border-left: 4px solid #16a34a;">
+                    <h3 style="color: #166534; margin-bottom: 8px;">Difficulty Scoring</h3>
+                    <p style="color: #64748b; font-size: 0.9em;">Smart algorithm that scores keyword difficulty based on actual competitor metrics and content quality.</p>
+                </div>
+
+                <div style="padding: 20px; background: #fef3c7; border-radius: 12px; border-left: 4px solid #b45309;">
+                    <h3 style="color: #78350f; margin-bottom: 8px;">Trending Keywords</h3>
+                    <p style="color: #64748b; font-size: 0.9em;">Discover trending keywords across 11 sources including Google, YouTube, Twitter, TikTok, and more.</p>
+                </div>
+
+                <div style="padding: 20px; background: #fce7f3; border-radius: 12px; border-left: 4px solid #be185d;">
+                    <h3 style="color: #831843; margin-bottom: 8px;">Bulk Analysis</h3>
+                    <p style="color: #64748b; font-size: 0.9em;">Analyze hundreds of keywords at once with bulk pricing discounts for larger batches.</p>
+                </div>
+
+                <div style="padding: 20px; background: #ede9fe; border-radius: 12px; border-left: 4px solid #7c3aed;">
+                    <h3 style="color: #5b21b6; margin-bottom: 8px;">Campaign Tracking</h3>
+                    <p style="color: #64748b; font-size: 0.9em;">Monitor keyword rankings automatically with daily/weekly updates and position change alerts.</p>
+                </div>
+
+                <div style="padding: 20px; background: #dbeafe; border-radius: 12px; border-left: 4px solid #0284c7;">
+                    <h3 style="color: #0c2d6b; margin-bottom: 8px;">Competitive Intel</h3>
+                    <p style="color: #64748b; font-size: 0.9em;">See which keywords competitors rank for and find gaps in your SEO strategy.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>This is a demo page. <a href="http://localhost:5173" style="color: #0369a1; text-decoration: none;">→ Visit the full application</a></p>
+            <p style="margin-top: 10px; font-size: 0.9em;">© 2026 Knotstranded LLC - SERPRank</p>
+        </footer>
+    </div>
+
+    <script>
+        // Sample keyword data for demo
+        const keywordDatabase = {
+            'best seo tools': [
+                { keyword: 'best seo tools', volume: 12400, difficulty: 45, traffic: 89000, opportunity: 'Excellent' },
+                { keyword: 'seo tools free', volume: 8900, difficulty: 32, traffic: 125000, opportunity: 'Excellent' },
+                { keyword: 'top seo tools 2024', volume: 5200, difficulty: 28, traffic: 98000, opportunity: 'Excellent' },
+            ],
+            'keyword research': [
+                { keyword: 'keyword research', volume: 15600, difficulty: 52, traffic: 67000, opportunity: 'Good' },
+                { keyword: 'keyword research tools', volume: 9300, difficulty: 48, traffic: 54000, opportunity: 'Good' },
+                { keyword: 'how to do keyword research', volume: 4200, difficulty: 15, traffic: 38000, opportunity: 'Excellent' },
+            ],
+            'seo rank tracker': [
+                { keyword: 'seo rank tracker', volume: 5200, difficulty: 28, traffic: 128000, opportunity: 'Excellent' },
+                { keyword: 'rank tracking tools', volume: 3800, difficulty: 35, traffic: 95000, opportunity: 'Good' },
+                { keyword: 'keyword rank tracker', volume: 2900, difficulty: 22, traffic: 142000, opportunity: 'Excellent' },
+            ],
+        };
+
+        // Trending data simulation
+        const trendingData = {
+            google: [
+                'AI tools 2024',
+                'machine learning',
+                'web development trends',
+                'remote jobs',
+                'cryptocurrency news'
+            ],
+            youtube: [
+                'web development tutorial',
+                'react.js beginners',
+                'node.js full course',
+                'coding for beginners',
+                'javascript advanced'
+            ],
+            twitter: [
+                '#AI',
+                '#WebDevelopment',
+                '#JavaScript',
+                '#Python',
+                '#TechNews'
+            ],
+            tiktok: [
+                'coding tips',
+                'web development hacks',
+                'programmer life',
+                'coding fails',
+                'tech tutorial'
+            ]
+        };
+
+        function analyzeKeyword() {
+            const keyword = document.getElementById('keywordInput').value.toLowerCase();
+            const resultsBody = document.getElementById('resultsBody');
+            const resultsTable = document.getElementById('resultsTable');
+            const noResults = document.getElementById('noResults');
+
+            if (!keyword) {
+                alert('Please enter a keyword');
+                return;
+            }
+
+            // Get data from database or create mock data
+            let results = keywordDatabase[keyword] || [
+                { keyword: keyword, volume: Math.floor(Math.random() * 20000) + 1000, difficulty: Math.floor(Math.random() * 100), traffic: Math.floor(Math.random() * 200000) + 10000, opportunity: ['Excellent', 'Good', 'Fair'][Math.floor(Math.random() * 3)] }
+            ];
+
+            resultsBody.innerHTML = results.map(result => `
+                <tr>
+                    <td>${result.keyword}</td>
+                    <td>${result.volume.toLocaleString()} / month</td>
+                    <td><span class="difficulty-badge ${result.difficulty < 30 ? 'difficulty-easy' : result.difficulty < 60 ? 'difficulty-medium' : 'difficulty-hard'}">${result.difficulty}</span></td>
+                    <td>${result.traffic.toLocaleString()}</td>
+                    <td><span class="opportunity-badge ${result.opportunity === 'Excellent' ? 'opportunity-excellent' : result.opportunity === 'Good' ? 'opportunity-good' : 'opportunity-fair'}">${result.opportunity}</span></td>
+                </tr>
+            `).join('');
+
+            resultsTable.style.display = 'table';
+            noResults.style.display = 'none';
+        }
+
+        function switchTrendTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tab + '-tab').classList.add('active');
+            event.target.classList.add('active');
+
+            // Populate trending data
+            const container = document.getElementById(tab + 'Trends');
+            const trends = trendingData[tab] || [];
+            
+            container.innerHTML = `
+                <div style="display: grid; gap: 10px;">
+                    ${trends.map((trend, index) => `
+                        <div style="padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #10b981; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 500; color: #1e293b;">${index + 1}. ${trend}</span>
+                            <span style="background: #dcfce7; color: #16a34a; padding: 4px 8px; border-radius: 4px; font-size: 0.85em;">↑ Trending</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Initialize with Google trends on load
+        window.addEventListener('load', () => {
+            switchTrendTab('google');
+        });
+
+        // Allow Enter key to analyze
+        document.getElementById('keywordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') analyzeKeyword();
+        });
+    </script>
+</body>
+</html>

@@ -18,6 +18,54 @@ export interface KeywordAnalysis {
     explanation: string
   }
   serpResults: SerpResult[]
+  advancedMetrics: {
+    trafficBreakdown: Array<{
+      position: number
+      ctr: number
+      estimatedMonthlyVisitors: number
+    }>
+    competitiveGaps: {
+      domainAuthorityGap: number
+      backlinkGap: number
+      pageSpeedGap: number
+      summary: string
+    }
+    entryDifficulty: {
+      difficulty: 'Easy' | 'Medium' | 'Hard' | 'Very Hard'
+      estimatedMonthsToRank: {
+        position10: number
+        position5: number
+        position1: number
+      }
+      recommendation: string
+    }
+    marketSaturation: {
+      saturatedFeatures: string[]
+      ctrReduction: number
+      adjustedTraffic: (baseTraffic: number) => number
+      difficulty: string
+    }
+    opportunityMatrix: {
+      goldZone: string
+      strongZone: string
+      nicheZone: string
+      avoidZone: string
+      description: string
+    }
+    roiPotential: {
+      estimatedMonthlyVisitors: number
+      assumedConversionRate: number
+      estimatedMonthlyLeads: number
+      assumedLeadValue: number
+      estimatedMonthlyRevenue: number
+    }
+    trendAnalysis: {
+      trend: 'growing' | 'stable' | 'declining'
+      percentageChange: number
+      quarterChange: number
+      recommendation: string
+    }
+  }
   timestamp: string
 }
 

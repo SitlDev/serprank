@@ -169,6 +169,19 @@ export class SerpController {
         avgDomainScore
       );
 
+      // Advanced metrics
+      const trafficBreakdown = KeywordScoreService.getTrafficBreakdown(mockSearchVolume);
+      const competitiveGaps = KeywordScoreService.getCompetitiveGaps(
+        domainScoresArray,
+        analysisResults.map(r => r.metrics.backlinksCount),
+        analysisResults.map(r => r.metrics.pageSpeed)
+      );
+      const entryDifficulty = KeywordScoreService.getEntryDifficulty(mockKeywordDifficulty, avgDomainScore);
+      const marketSaturation = KeywordScoreService.getMarketSaturation(0, false, false, false, false);
+      const opportunityMatrix = KeywordScoreService.getOpportunityMatrix();
+      const roiPotential = KeywordScoreService.getRoiPotential(mockSearchVolume, 1);
+      const trendAnalysis = KeywordScoreService.getTrendAnalysis(keyword);
+
       // Step 5: Save keyword score to database
       console.log('💾 Saving keyword score...');
       await KeywordModel.updateKeywordScore(
@@ -194,6 +207,16 @@ export class SerpController {
         },
         scoringBreakdown,
         serpResults: analysisResults,
+        // Advanced Metrics
+        advancedMetrics: {
+          trafficBreakdown,
+          competitiveGaps,
+          entryDifficulty,
+          marketSaturation,
+          opportunityMatrix,
+          roiPotential,
+          trendAnalysis
+        },
         timestamp: new Date().toISOString()
       });
 

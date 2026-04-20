@@ -1,0 +1,106 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#ffffff"/>
+  
+  <!-- Header -->
+  <rect width="800" height="60" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="20" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#1e293b">SERPRank Dashboard</text>
+  
+  <!-- Search Section -->
+  <rect x="20" y="80" width="760" height="70" rx="12" fill="#f0f9ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="40" y="105" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#1e293b">Analyze Keywords</text>
+  <rect x="40" y="120" width="720" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="60" y="148" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#94a3b8">Enter keyword... (e.g. "best seo tools")</text>
+  
+  <!-- Results Table Header -->
+  <text x="20" y="190" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="#1e293b">Top Results</text>
+  
+  <!-- Table Headers -->
+  <rect x="20" y="205" width="760" height="35" fill="#f1f5f9"/>
+  <text x="40" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#64748b">Keyword</text>
+  <text x="220" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#64748b">Volume</text>
+  <text x="320" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#64748b">Difficulty</text>
+  <text x="440" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#64748b">Traffic</text>
+  <text x="560" y="230" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#64748b">Opportunity</text>
+  
+  <!-- Row 1 -->
+  <rect x="20" y="245" width="760" height="40" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="272" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#1e293b" font-weight="500">best seo tools</text>
+  <text x="220" y="272" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">12.4K</text>
+  <text x="320" y="272" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">45</text>
+  <!-- Difficulty bar -->
+  <rect x="380" y="260" width="40" height="6" rx="3" fill="#fca5a5"/>
+  <text x="440" y="272" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">89K</text>
+  <!-- Opportunity badge -->
+  <rect x="560" y="256" width="60" height="28" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+  <text x="575" y="275" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#16a34a" font-weight="600">Good</text>
+  
+  <!-- Row 2 -->
+  <rect x="20" y="290" width="760" height="40" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="317" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#1e293b" font-weight="500">keyword research tool</text>
+  <text x="220" y="317" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">8.9K</text>
+  <text x="320" y="317" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">52</text>
+  <!-- Difficulty bar -->
+  <rect x="380" y="305" width="45" height="6" rx="3" fill="#fb923c"/>
+  <text x="440" y="317" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">67K</text>
+  <!-- Opportunity badge -->
+  <rect x="560" y="301" width="60" height="28" rx="6" fill="#fef3c7" stroke="#fcd34d" stroke-width="1"/>
+  <text x="575" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#b45309" font-weight="600">Medium</text>
+  
+  <!-- Row 3 -->
+  <rect x="20" y="335" width="760" height="40" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="40" y="362" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#1e293b" font-weight="500">seo rank tracker</text>
+  <text x="220" y="362" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">5.2K</text>
+  <text x="320" y="362" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">28</text>
+  <!-- Difficulty bar -->
+  <rect x="380" y="350" width="25" height="6" rx="3" fill="#86efac"/>
+  <text x="440" y="362" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#475569">128K</text>
+  <!-- Opportunity badge -->
+  <rect x="560" y="346" width="60" height="28" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+  <text x="570" y="365" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#16a34a" font-weight="600">Excellent</text>
+  
+  <!-- Analytics Section -->
+  <!-- Left Chart -->
+  <g>
+    <text x="20" y="410" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#1e293b">Difficulty Distribution</text>
+    <!-- Chart background -->
+    <rect x="20" y="425" width="350" height="150" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <!-- Bars -->
+    <rect x="50" y="530" width="30" height="35" fill="#86efac"/>
+    <text x="55" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#475569" text-anchor="middle">Easy</text>
+    
+    <rect x="100" y="490" width="30" height="75" fill="#fcd34d"/>
+    <text x="105" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#475569" text-anchor="middle">Medium</text>
+    
+    <rect x="150" y="460" width="30" height="105" fill="#fb923c"/>
+    <text x="155" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#475569" text-anchor="middle">Hard</text>
+    
+    <rect x="200" y="510" width="30" height="55" fill="#f87171"/>
+    <text x="205" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#475569" text-anchor="middle">V.Hard</text>
+    
+    <rect x="250" y="540" width="30" height="25" fill="#cbd5e1"/>
+    <text x="255" y="570" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#475569" text-anchor="middle">Extreme</text>
+  </g>
+  
+  <!-- Right Stats -->
+  <g>
+    <text x="430" y="410" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#1e293b">Quick Stats</text>
+    
+    <!-- Stat 1 -->
+    <rect x="430" y="425" width="320" height="50" rx="8" fill="#f0f9ff" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="450" y="445" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b">Total Keywords Analyzed</text>
+    <text x="450" y="465" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#0369a1">1,247</text>
+    
+    <!-- Stat 2 -->
+    <rect x="430" y="490" width="320" height="50" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="450" y="510" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b">Ranking Opportunities</text>
+    <text x="450" y="530" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#16a34a">342</text>
+  </g>
+  
+  <!-- Footer Info -->
+  <text x="20" y="595" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#94a3b8">Last updated: 2 hours ago • Updated automatically daily</text>
+  
+  <!-- Accent corner -->
+  <circle cx="750" cy="30" r="40" fill="#10b981" opacity="0.1"/>
+</svg>

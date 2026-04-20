@@ -24,7 +24,10 @@ class ApiClient {
 
     // Handle response errors
     this.client.interceptors.response.use(
-      (response) => response,
+      (response) => {
+        console.log('API Response:', response.config.url, response.data);
+        return response;
+      },
       (error: AxiosError) => {
         if (error.response?.status === 401) {
           this.logout()

@@ -4,6 +4,10 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import keywordRoutes from './routes/keywords';
 import serpRoutes from './routes/serp';
+import settingsRoutes from './routes/settings';
+import historyRoutes from './routes/history';
+import searchHistoryRoutes from './routes/searchHistory';
+import trendingRoutes from './routes/trending';
 import testRoutes from './routes/test';
 import { errorHandler } from './middleware/auth';
 import { testConnection } from './database/connection';
@@ -15,7 +19,11 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    process.env.FRONTEND_URL || 'http://localhost:5173'
+  ],
   credentials: true
 }));
 app.use(express.json());
@@ -58,8 +66,12 @@ app.get('/api/health/db', async (req: Request, res: Response) => {
 // API Routes
 app.use('/api/test', testRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api', settingsRoutes);
+app.use('/api', searchHistoryRoutes);
 app.use('/api/keywords', keywordRoutes);
 app.use('/api/serp', serpRoutes);
+app.use('/api/history', historyRoutes);
+app.use('/api/trending', trendingRoutes);
 // app.use('/api/domains', domainRoutes);
 // app.use('/api/competitors', competitorRoutes);
 

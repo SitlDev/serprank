@@ -3,6 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import './App.css'
 import LandingPage from './pages/LandingPage'
 import Dashboard from './pages/Dashboard'
+import SettingsPage from './pages/SettingsPage'
+import TrendingPage from './pages/TrendingPage'
+import PricingPage from './pages/PricingPage'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
+import SecurityPage from './pages/SecurityPage'
 import { AuthPage } from './pages/AuthPage'
 import { TestConnection } from './components/TestConnection'
 import { AuthService } from './services/auth'
@@ -34,7 +40,13 @@ function App() {
         <Route path="/test" element={<TestConnection />} />
         <Route path="/login" element={<AuthPage mode="login" />} />
         <Route path="/register" element={<AuthPage mode="register" />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/legal/terms" element={<TermsPage />} />
+        <Route path="/legal/privacy" element={<PrivacyPage />} />
+        <Route path="/legal/security" element={<SecurityPage />} />
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/trending" element={isAuthenticated ? <TrendingPage /> : <Navigate to="/login" />} />
+        <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   )

@@ -57,9 +57,9 @@ export default function LandingPage() {
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-slate-600 hover:text-brand-600 transition">Features</a>
-            <a href="#pricing" className="text-slate-600 hover:text-brand-600 transition">Pricing</a>
-            <a href="#" className="text-slate-600 hover:text-brand-600 transition">Docs</a>
-            <button className="px-4 py-2 bg-slate-100 text-slate-800 rounded-lg hover:bg-slate-200 transition">Sign In</button>
+            <Link to="/pricing" className="text-slate-600 hover:text-brand-600 transition">Pricing</Link>
+            <a href="https://docs.serprank.io" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-brand-600 transition">Docs</a>
+            <Link to="/login" className="px-4 py-2 bg-slate-100 text-slate-800 rounded-lg hover:bg-slate-200 transition">Sign In</Link>
             <Link to="/dashboard" className="btn-primary">Get Started</Link>
           </div>
         </div>
@@ -90,17 +90,8 @@ export default function LandingPage() {
             
             <div className="relative animate-fadeInUp">
               <div className="absolute inset-0 bg-gradient-to-br from-brand-200 to-accent-200 rounded-3xl blur-3xl opacity-30"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl border border-slate-100">
-                <div className="space-y-4">
-                  <div className="h-4 bg-slate-200 rounded w-3/4"></div>
-                  <div className="h-4 bg-slate-200 rounded w-1/2"></div>
-                  <div className="grid grid-cols-4 gap-3 mt-8">
-                    {[...Array(8)].map((_, i) => (
-                      <div key={i} className="h-20 bg-gradient-to-br from-brand-100 to-brand-50 rounded-lg"></div>
-                    ))}
-                  </div>
-                  <div className="mt-8 h-32 bg-slate-50 rounded-lg border-2 border-dashed border-slate-300"></div>
-                </div>
+              <div className="relative bg-white rounded-3xl p-8 shadow-2xl border border-slate-100 overflow-hidden">
+                <img src="/dashboard-mockup.svg" alt="SERPRank Dashboard" className="w-full h-auto" />
               </div>
             </div>
           </div>
@@ -162,42 +153,55 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-slate-50 py-12 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid md:grid-cols-5 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-8 h-8 rounded-lg gradient-brand"></div>
                 <span className="font-bold">SERPRank</span>
               </div>
               <p className="text-sm text-slate-600">Find keywords you can actually rank for</p>
+              <p className="text-xs text-slate-500 mt-4">© 2024-2026 Knotstranded LLC</p>
             </div>
             <div>
               <h4 className="font-semibold mb-4 text-slate-900">Product</h4>
               <ul className="space-y-2 text-sm text-slate-600">
-                <li><a href="#" className="hover:text-brand-600">Features</a></li>
-                <li><a href="#" className="hover:text-brand-600">Pricing</a></li>
+                <li><a href="#features" className="hover:text-brand-600">Features</a></li>
+                <li><Link to="/pricing" className="hover:text-brand-600">Pricing</Link></li>
+                <li><a href="https://docs.serprank.io" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">Documentation</a></li>
                 <li><a href="#" className="hover:text-brand-600">API</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4 text-slate-900">Company</h4>
               <ul className="space-y-2 text-sm text-slate-600">
+                <li><a href="https://knotstranded.com" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600">About</a></li>
                 <li><a href="#" className="hover:text-brand-600">Blog</a></li>
+                <li><a href="mailto:hello@knotstranded.com" className="hover:text-brand-600">Contact</a></li>
                 <li><a href="#" className="hover:text-brand-600">Careers</a></li>
-                <li><a href="#" className="hover:text-brand-600">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4 text-slate-900">Support</h4>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li><a href="mailto:support@serprank.io" className="hover:text-brand-600">Help Center</a></li>
+                <li><a href="#" className="hover:text-brand-600">Community</a></li>
+                <li><a href="#" className="hover:text-brand-600">Status</a></li>
+                <li><a href="mailto:bugs@serprank.io" className="hover:text-brand-600">Report Bug</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4 text-slate-900">Legal</h4>
               <ul className="space-y-2 text-sm text-slate-600">
-                <li><a href="#" className="hover:text-brand-600">Privacy</a></li>
-                <li><a href="#" className="hover:text-brand-600">Terms</a></li>
-                <li><a href="#" className="hover:text-brand-600">Security</a></li>
+                <li><Link to="/legal/privacy" className="hover:text-brand-600">Privacy</Link></li>
+                <li><Link to="/legal/terms" className="hover:text-brand-600">Terms</Link></li>
+                <li><Link to="/legal/security" className="hover:text-brand-600">Security</Link></li>
+                <li><a href="#" className="hover:text-brand-600">Cookies</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-slate-200 pt-8 flex justify-between items-center text-sm text-slate-600">
-            <p>&copy; 2026 SERPRank. All rights reserved.</p>
-            <div className="flex space-x-6">
+          <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-600">
+            <p>Knotstranded LLC, USA | support@serprank.io | +1-555-SERP-RANK</p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="hover:text-brand-600">Twitter</a>
               <a href="#" className="hover:text-brand-600">LinkedIn</a>
               <a href="#" className="hover:text-brand-600">GitHub</a>

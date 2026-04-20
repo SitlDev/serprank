@@ -1,6 +1,9 @@
-import { query } from './connection';
+import { query } from '../database/connection';
 import { User, Keyword, SerpResult, DetectedWeakness, DomainScore } from '../types/index';
 import { v4 as uuidv4 } from 'uuid';
+export { SettingsModel } from './settings';
+export { HistoryModel } from './history';
+export { SearchHistoryModel } from './searchHistory';
 
 // User Model
 export class UserModel {

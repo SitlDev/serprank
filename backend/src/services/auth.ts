@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { UserModel } from '../models/index';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key_change_in_production';
-const JWT_EXPIRATION = process.env.JWT_EXPIRATION || '7d';
+const JWT_SECRET: string = process.env.JWT_SECRET || 'your_jwt_secret_key_change_in_production';
+const JWT_EXPIRATION: string = process.env.JWT_EXPIRATION || '7d';
 
 export class AuthService {
   static async hashPassword(password: string): Promise<string> {
@@ -16,7 +16,7 @@ export class AuthService {
   }
 
   static generateToken(userId: string): string {
-    return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
+    return jwt.sign({ userId }, JWT_SECRET as string, { expiresIn: JWT_EXPIRATION as any });
   }
 
   static verifyToken(token: string): any {
