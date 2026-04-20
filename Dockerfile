@@ -1,22 +1,3 @@
-# Build stage
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-# Copy backend package files
-COPY backend/package*.json ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy backend source code
-COPY backend/src ./src
-COPY backend/tsconfig.json ./
-
-# Build TypeScript
-RUN npm run build
-
-# Runtime stage
 FROM node:20-alpine
 
 WORKDIR /app
@@ -24,11 +5,15 @@ WORKDIR /app
 # Copy package files
 COPY backend/package*.json ./
 
-# Install production dependencies only
-RUN npm ci --only=production
+# Install dependencies
+RUN npm install --prefer-offline --no-audit
 
-# Copy built code from builder
-COPY --from=builder /app/dist ./dist
+# Copy source code
+COPY backend/src ./src
+COPY backend/tsconfig.json ./
+
+# Build TypeScript
+RUN npm run build
 
 # Expose port
 EXPOSE 3000
