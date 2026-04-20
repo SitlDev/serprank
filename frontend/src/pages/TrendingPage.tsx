@@ -214,13 +214,13 @@ export default function TrendingPage() {
                         <button
                           key={source.id}
                           onClick={() => setActiveSource(source.id as TrendingSourceType)}
-                          disabled={source.coming_soon}
+                          disabled={source.comingSoon}
                           title={source.description}
                           className={`px-3 py-2 rounded-lg font-medium text-sm transition-all ${
                             activeSource === source.id
                               ? 'bg-purple-600 text-white'
                               : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                          } ${source.coming_soon ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          } ${source.comingSoon ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           {source.icon} {source.name}
                         </button>
@@ -238,13 +238,13 @@ export default function TrendingPage() {
                         <button
                           key={source.id}
                           onClick={() => setActiveSource(source.id as TrendingSourceType)}
-                          disabled={source.coming_soon}
+                          disabled={source.comingSoon}
                           title={source.description}
                           className={`px-3 py-2 rounded-lg font-medium text-sm transition-all ${
                             activeSource === source.id
                               ? 'bg-purple-600 text-white'
                               : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                          } ${source.coming_soon ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          } ${source.comingSoon ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           {source.icon} {source.name}
                         </button>

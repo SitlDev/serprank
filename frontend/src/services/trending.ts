@@ -32,7 +32,7 @@ export class TrendingService {
    */
   static async getTrendingSources(): Promise<TrendingSource[]> {
     const response = await api.get('/trending/sources')
-    return response.data.data
+    return (response.data as any).data
   }
 
   /**
@@ -46,47 +46,47 @@ export class TrendingService {
     const response = await api.get('/trending', {
       params: { source, limit, period }
     })
-    return response.data.data
+    return (response.data as any).data
   }
 
   /**
    * Get trending keywords grouped by category
    */
   static async getTrendingByCategory(
-    source: TrendingSourceType = 'platform',
+    source: TrendingSourceType = 'google',
     limit: number = 10,
     period: 'day' | 'week' | 'month' = 'week'
   ): Promise<TrendingCategory[]> {
     const response = await api.get('/trending/categories', {
       params: { source, limit, period }
     })
-    return response.data.data
+    return (response.data as any).data
   }
 
   /**
    * Get trending keywords with growth metrics
    */
   static async getTrendingWithGrowth(
-    source: TrendingSourceType = 'platform',
+    source: TrendingSourceType = 'google',
     limit: number = 20,
     period: 'week' | 'month' = 'week'
   ): Promise<TrendingKeyword[]> {
     const response = await api.get('/trending/with-growth', {
       params: { source, limit, period }
     })
-    return response.data.data
+    return (response.data as any).data
   }
 
   /**
    * Get keywords that are spiking
    */
   static async getSpikingKeywords(
-    source: TrendingSourceType = 'platform',
+    source: TrendingSourceType = 'google',
     limit: number = 10
   ): Promise<TrendingKeyword[]> {
     const response = await api.get('/trending/spiking', {
       params: { source, limit }
     })
-    return response.data.data
+    return (response.data as any).data
   }
 }

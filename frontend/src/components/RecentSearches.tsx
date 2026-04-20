@@ -1,4 +1,4 @@
-import React from 'lucide-react'
+import React from 'react'
 import { Clock, X, Trash2 } from 'lucide-react'
 
 interface SearchHistoryItem {
@@ -16,7 +16,7 @@ interface RecentSearchesProps {
   isLoading?: boolean
 }
 
-export const RecentSearches: React.FC<RecentSearchesProps> = ({
+export const RecentSearches = ({
   searches,
   onSearchClick,
   onDeleteSearch,
