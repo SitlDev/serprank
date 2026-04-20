@@ -1,19 +1,13 @@
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
 
-# Copy package files
 COPY backend/package*.json ./
 
-# Install all dependencies (including dev)
-RUN npm install --prefer-offline --no-audit
+RUN npm install --legacy-peer-deps
 
-# Copy source code
-COPY backend/src ./src
-COPY backend/tsconfig.json ./
+COPY backend .
 
-# Expose port
 EXPOSE 3000
 
-# Start application using ts-node directly from source
-CMD ["npx", "ts-node", "src/server.ts"]
+CMD ["npm", "run", "dev"]
