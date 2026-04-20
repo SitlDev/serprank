@@ -5,18 +5,15 @@ WORKDIR /app
 # Copy package files
 COPY backend/package*.json ./
 
-# Install dependencies
+# Install all dependencies (including dev)
 RUN npm install --prefer-offline --no-audit
 
 # Copy source code
 COPY backend/src ./src
 COPY backend/tsconfig.json ./
 
-# Build TypeScript
-RUN npm run build
-
 # Expose port
 EXPOSE 3000
 
-# Start application
-CMD ["npm", "start"]
+# Start application using ts-node directly from source
+CMD ["npx", "ts-node", "src/server.ts"]
