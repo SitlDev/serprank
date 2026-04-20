@@ -342,9 +342,9 @@ export default function Dashboard() {
         {!analysis && (
           <RecentSearches
             searches={recentSearches}
-            loading={loadingSearches}
+            isLoading={loadingSearches}
             onSearchClick={handleSearchFromHistory}
-            onDeleteClick={handleDeleteSearch}
+            onDeleteSearch={handleDeleteSearch}
             onClearHistory={handleClearHistory}
           />
         )}

@@ -22,7 +22,7 @@ export const RecentSearches = ({
   onDeleteSearch,
   onClearHistory,
   isLoading = false,
-}) => {
+}: RecentSearchesProps) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     const now = new Date()
@@ -74,7 +74,7 @@ export const RecentSearches = ({
       </div>
 
       <div className="divide-y divide-slate-200 max-h-64 overflow-y-auto">
-        {searches.map((search) => (
+        {searches.map((search: SearchHistoryItem) => (
           <button
             key={search.id}
             onClick={() => onSearchClick(search.keyword)}
