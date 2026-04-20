@@ -4,7 +4,7 @@ import { Button } from '../components/Button'
 import { Input } from '../components/Input'
 import { Alert } from '../components/Alert'
 import { AuthService } from '../services/auth'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 interface AuthPageProps {
   mode: 'login' | 'register'
@@ -114,16 +114,16 @@ export const AuthPage = ({ mode }: AuthPageProps) => {
             {mode === 'login' ? (
               <>
                 Don't have an account?{' '}
-                <a href="#" className="text-brand-600 hover:text-brand-700 font-semibold">
+                <Link to="/register" className="text-brand-600 hover:text-brand-700 font-semibold">
                   Sign up
-                </a>
+                </Link>
               </>
             ) : (
               <>
                 Already have an account?{' '}
-                <a href="#" className="text-brand-600 hover:text-brand-700 font-semibold">
+                <Link to="/login" className="text-brand-600 hover:text-brand-700 font-semibold">
                   Sign in
-                </a>
+                </Link>
               </>
             )}
           </div>
